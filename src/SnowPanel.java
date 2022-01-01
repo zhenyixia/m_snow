@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 
 public class SnowPanel extends JPanel{
+  // 用xx，yy表示所有雪花的坐标的x轴与y轴坐标
   private int[] xx = new int[1000];
 
   private int[] yy = new int[1000];
@@ -25,6 +26,10 @@ public class SnowPanel extends JPanel{
   // 实际雪花 落下的宽度
   private int width = 1900;
 
+  // 月食速度系数，越大则速度越慢
+  private int speed = 2;
+
+  //构造器初始化所有雪花的坐标与字体数组
   public SnowPanel(){
     int i;
     for(i = 0; i < this.xx.length; i++){
@@ -36,6 +41,8 @@ public class SnowPanel extends JPanel{
       this.fs[i] = new Font("宋体", 1, i + 12);
   }
 
+  // 重写paint方法，画月亮，月食，与雪景
+  @Override
   public void paint(Graphics g){
     super.paint(g);
     setBackground(Color.BLACK);
@@ -50,26 +57,34 @@ public class SnowPanel extends JPanel{
     }
   }
 
+  // 开始下雪，
   public void startDown(){
-    (new Thread(){
-      public void run(){
-        while(true){
-          SnowPanel.this.x = SnowPanel.this.x - 1;
-          SnowPanel.this.y = SnowPanel.this.y - 1;
-          for(int i = 0; i < SnowPanel.this.yy.length; i++){
-            SnowPanel.this.yy[i] = SnowPanel.this.yy[i] + 1;
-            if(SnowPanel.this.yy[i] >= high){
-              SnowPanel.this.yy[i] = 0;
-            }
-          }
-          SnowPanel.this.repaint();
-          try{
-            sleep(30L);
-          }catch(InterruptedException e){
-            e.printStackTrace();
+    (new Thread(() -> {
+      int speed = SnowPanel.this.speed;
+      while(true){
+        // 控制月食运动
+        if(SnowPanel.this.x >= 0 || SnowPanel.this.y >= 0){
+          speed--;
+          if(speed == 0){
+            SnowPanel.this.x = SnowPanel.this.x - 1;
+            SnowPanel.this.y = SnowPanel.this.y - 1;
+            speed = SnowPanel.this.speed;
           }
         }
+        // 控制
+        for(int i = 0; i < SnowPanel.this.yy.length; i++){
+          SnowPanel.this.yy[i] = SnowPanel.this.yy[i] + 1;
+          if(SnowPanel.this.yy[i] >= high){
+            SnowPanel.this.yy[i] = 0;
+          }
+        }
+        SnowPanel.this.repaint();
+        try{
+          Thread.sleep(30L);
+        }catch(InterruptedException e){
+          e.printStackTrace();
+        }
       }
-    }).start();
+    })).start();
   }
 }

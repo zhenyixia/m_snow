@@ -7,17 +7,17 @@ import javax.swing.JFrame;
 public class SnowFrame extends JFrame{
   private SnowPanel snowPanel;
 
-  public void addPanel() {
+  public void addPanel(){
     this.snowPanel = new SnowPanel();
     add(this.snowPanel);
     this.snowPanel.startDown();
   }
 
-  public void showMe() {
+  public void showMe(){
     setVisible(true);
     setSize(1000, 600);
     setTitle("月夜雪景");
-        setDefaultCloseOperation(3);
+    setDefaultCloseOperation(3);
     addPanel();
   }
 }

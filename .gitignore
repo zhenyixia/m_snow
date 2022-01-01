@@ -38,3 +38,4 @@ src/main/**/application-dev.yml
 mvnw
 mvnw.cmd
 out/
+**/META-INF/**
